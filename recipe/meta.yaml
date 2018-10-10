@@ -1,5 +1,4 @@
 {% set version = '2.0-4' %}
-
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -10,36 +9,40 @@ package:
 source:
   fn: ifultools_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/ifultools_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/ifultools/ifultools_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/ifultools_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/ifultools/ifultools_{{ version }}.tar.gz
   sha256: 22014c9f8ebe0ed5874c92ae83e06eeea6c7a5889fb2d63543b2e6a094ae625f
 
 build:
   merge_build_host: True  # [win]
-  number: 1
+  number: 2
+  skip: true  # [win32]
   rpaths:
     - lib/R/lib/
     - lib/
-  skip: True  # [win32]
 
 requirements:
   build:
-    - posix                # [win]
-    - {{ compiler('c') }}        # [unix]
-    - {{ compiler('m2w64_c') }}  # [win]
+    - {{ compiler('c') }}        # [not win]
+    - {{native}}toolchain        # [win]
+    - {{posix}}filesystem        # [win]
+    - {{posix}}make
+    - {{posix}}sed               # [win]
+    - {{posix}}coreutils         # [win]
+    - {{posix}}zip               # [win]
   host:
     - r-base
     - r-mass
     - r-splus2r >=1.2_0
-
   run:
     - r-base
+    - {{native}}gcc-libs         # [win]
     - r-mass
     - r-splus2r >=1.2_0
 
 test:
   commands:
-    - $R -e "library('ifultools')"  # [not win]
+    - $R -e "library('ifultools')"           # [not win]
     - "\"%R%\" -e \"library('ifultools')\""  # [win]
 
 about:
@@ -52,8 +55,9 @@ about:
 
 extra:
   recipe-maintainers:
-    - cbrueffer
     - johanneskoester
     - bgruening
     - daler
     - jdblischak
+    - cbrueffer
+    - dbast
