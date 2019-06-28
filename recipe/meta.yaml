@@ -1,4 +1,4 @@
-{% set version = '2.0-4' %}
+{% set version = '2.0-5' %}
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -7,24 +7,22 @@ package:
   version: {{ version|replace("-", "_") }}
 
 source:
-  fn: ifultools_{{ version }}.tar.gz
   url:
     - {{ cran_mirror }}/src/contrib/ifultools_{{ version }}.tar.gz
     - {{ cran_mirror }}/src/contrib/Archive/ifultools/ifultools_{{ version }}.tar.gz
-  sha256: 22014c9f8ebe0ed5874c92ae83e06eeea6c7a5889fb2d63543b2e6a094ae625f
+  sha256: 72a8b20c4ff06bc2870af0f368a4bc8114a7126e174cf05554ab56f6d9da1310
 
 build:
   merge_build_host: True  # [win]
-  number: 1002
-  skip: true  # [win32]
+  number: 0
   rpaths:
     - lib/R/lib/
     - lib/
 
 requirements:
   build:
-    - {{ compiler('c') }}        # [not win]
-    - {{native}}toolchain        # [win]
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
     - {{posix}}filesystem        # [win]
     - {{posix}}make
     - {{posix}}sed               # [win]
@@ -54,9 +52,20 @@ about:
 
 extra:
   recipe-maintainers:
-    - johanneskoester
-    - bgruening
-    - daler
-    - jdblischak
-    - cbrueffer
-    - dbast
+    - conda-forge/r
+
+# Package: ifultools
+# Title: Insightful Research Tools
+# Version: 2.0-5
+# Authors@R: person("William", "Constantine", email = "wlbconstan@gmail.com", role = c("cre", "aut"))
+# Depends: R (>= 3.0.2)
+# Imports: MASS, methods, splus2R (>= 1.2-0)
+# Description: Insightful Research Tools.
+# License: GPL-2
+# Collate: it_mutils.R it_plot.R it_util.R it_calls.R package.R
+# Repository: CRAN
+# NeedsCompilation: yes
+# Packaged: 2019-03-04 17:57:49 UTC; william
+# Author: William Constantine [cre, aut]
+# Maintainer: William Constantine <wlbconstan@gmail.com>
+# Date/Publication: 2019-03-04 22:00:03 UTC
