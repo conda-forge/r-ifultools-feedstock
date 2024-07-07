@@ -1,6 +1,5 @@
 {% set version = "2.0-26" %}
 {% set posix = 'm2-' if win else '' %}
-{% set native = 'm2w64-' if win else '' %}
 
 package:
   name: r-ifultools
@@ -13,8 +12,7 @@ source:
   sha256: 816a814513887013aec69123e0fb27b8bcf8d2ec5d0d51d06adbc86260fe75d2
 
 build:
-  merge_build_host: true  # [win]
-  number: 2
+  number: 3
   rpaths:
     - lib/R/lib/
     - lib/
@@ -22,7 +20,9 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}              # [not win]
+    - {{ stdlib("c") }}                # [not win]
     - {{ compiler('m2w64_c') }}        # [win]
+    - {{ stdlib("m2w64_c") }}          # [win]
     - {{ posix }}filesystem        # [win]
     - {{ posix }}make
     - {{ posix }}sed               # [win]
@@ -34,7 +34,6 @@ requirements:
     - r-splus2r >=1.2_0
   run:
     - r-base
-    - {{ native }}gcc-libs         # [win]
     - r-mass
     - r-splus2r >=1.2_0
 
